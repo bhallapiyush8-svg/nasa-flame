@@ -1,0 +1,51 @@
+{
+  "fuel_phases": [
+    "Dust/Aerosol",
+    "Gas",
+    "Liquid",
+    "Smoke/Aerosol",
+    "Solid"
+  ],
+  "diluents": [
+    "Ar",
+    "CO2",
+    "He",
+    "N2"
+  ],
+  "suppression_methods": [
+    "CO2 Discharge",
+    "Cabin Depressurization",
+    "Fine-Water-Mist",
+    "N2 Flooding",
+    "None",
+    "Ventilation Cutoff"
+  ],
+  "regimes": [
+    "Quenched",
+    "Invisible Cool Flame",
+    "Steady Hot Burn",
+    "Vigorous Spread"
+  ],
+  "features": [
+    "gravity_g",
+    "oxygen_pct",
+    "pressure_kpa",
+    "ventilation_speed_cms",
+    "sample_thickness_mm",
+    "phase_Dust/Aerosol",
+    "phase_Gas",
+    "phase_Liquid",
+    "phase_Smoke/Aerosol",
+    "phase_Solid",
+    "diluent_Ar",
+    "diluent_CO2",
+    "diluent_He",
+    "diluent_N2",
+    "supp_CO2 Discharge",
+    "supp_Cabin Depressurization",
+    "supp_Fine-Water-Mist",
+    "supp_N2 Flooding",
+    "supp_None",
+    "supp_Ventilation Cutoff"
+  ]
+}

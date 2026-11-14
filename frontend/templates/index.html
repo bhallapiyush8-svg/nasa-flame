@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flame in Freefall | NASA Space Apps 2026 Microgravity Fire Safety</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+  <!-- Mission Styles -->
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <!-- ========================================== -->
+  <!-- MISSION CONTROL HEADER -->
+  <!-- ========================================== -->
+  <header class="mission-header">
+    <div class="mission-header-inner">
+      <div class="brand-section">
+        <div class="nasa-logo-badge">NASA</div>
+        <div class="brand-text">
+          <h1>FLAME IN <span>FREEFALL</span> <small style="font-size:0.7rem; color:var(--text-muted); font-weight:400; border:1px solid rgba(0,210,255,0.3); padding:2px 6px; border-radius:4px;">SPACE APPS 2026</small></h1>
+          <p>AI-Powered Fire Safety & Microgravity Combustion Physics Architecture</p>
+        </div>
+      </div>
+
+      <!-- Habitat Selector Quick Switcher -->
+      <div style="display:flex; align-items:center; gap:0.75rem;">
+        <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase; font-family:var(--font-mono);">Habitat Preset:</span>
+        <select id="globalHabitatPreset" class="filter-select" style="min-width:240px; border-color:var(--accent-cyan);">
+          <option value="iss-space-station">Space Stations (ISS / Gateway - 0G)</option>
+          <option value="crew-capsule">Spacecraft / Crew Capsules (Orion - 0G)</option>
+          <option value="lunar-base">Lunar Surface Bases (Artemis - 0.16G)</option>
+          <option value="martian-hab">Martian Habitats (Mars Base 1 - 0.38G)</option>
+          <option value="pressurized-rover">Pressurized Rovers (Lunar/Mars)</option>
+        </select>
+      </div>
+
+      <!-- Telemetry Status Bar -->
+      <div class="telemetry-status-bar">
+        <div class="telemetry-item">
+          <span class="telemetry-label">PSI Archive Link</span>
+          <span class="telemetry-value live">ONLINE (1,600+ RUNS)</span>
+        </div>
+        <div class="telemetry-item">
+          <span class="telemetry-label">ML Inference Node</span>
+          <span class="telemetry-value" style="color:var(--accent-cyan);"><i class="fa-solid fa-microchip"></i> READY (RF 95.3%)</span>
+        </div>
+        <div class="telemetry-item">
+          <span class="telemetry-label">Suppression Matrix</span>
+          <span class="telemetry-value" style="color:#00ff88;"><i class="fa-solid fa-shield-halved"></i> FINE-WATER-MIST</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Habitat Profile Quick Banner -->
+  <div style="background:rgba(0, 210, 255, 0.05); border-bottom:1px solid rgba(0, 210, 255, 0.15); padding:0.45rem 2rem; font-size:0.8rem; color:#cbd5e1;" id="habitatDescriptionBanner">
+    <strong>Space Stations (ISS / Gateway) Profile Loaded:</strong> Standard Earth sea-level equivalent microgravity atmosphere. High risk of the 0G Ventilation Paradox due to continuous module HVAC airflow (5–12 cm/s). 
+    <span style="color:var(--accent-green); margin-left:8px;">Suppression: Fine-Water-Mist & Ventilation Cutoff</span>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MISSION NAVIGATION TABS -->
+  <!-- ========================================== -->
+  <nav class="mission-nav">
+    <ul class="nav-tabs">
+      <li>
+        <button class="nav-tab-btn active" data-tab="tab-simulator">
+          <i class="fa-solid fa-fire-burner"></i> Micro-G Flame Simulator
+        </button>
+      </li>
+      <li>
+        <button class="nav-tab-btn" data-tab="tab-investigations">
+          <i class="fa-solid fa-book-atlas"></i> PSI Investigations Matrix
+        </button>
+      </li>
+      <li>
+        <button class="nav-tab-btn" data-tab="tab-ml-engine">
+          <i class="fa-solid fa-brain"></i> AI / ML Risk Predictor
+        </button>
+      </li>
+      <li>
+        <button class="nav-tab-btn" data-tab="tab-scenario">
+          <i class="fa-solid fa-triangle-exclamation"></i> Emergency Fire Simulator
+        </button>
+      </li>
+      <li>
+        <button class="nav-tab-btn" data-tab="tab-hardware">
+          <i class="fa-solid fa-server"></i> CIR / MSG Hardware
+        </button>
+      </li>
+      <li>
+        <button class="nav-tab-btn" data-tab="tab-spinoffs">
+          <i class="fa-solid fa-earth-americas"></i> Controls & Earth Spinoffs
+        </button>
+      </li>
+      <li>
+        <button class="nav-tab-btn" data-tab="tab-copilot">
+          <i class="fa-solid fa-robot"></i> AI Safety Co-Pilot
+        </button>
+      </li>
+      <li>
+        <button class="nav-tab-btn" data-tab="tab-extractor">
+          <i class="fa-solid fa-cloud-arrow-down"></i> NASA Data Extractor
+        </button>
+      </li>
+      <li>
+        <button class="nav-tab-btn" data-tab="tab-analytics">
+          <i class="fa-solid fa-chart-line"></i> Telemetry & Dataset Download
+        </button>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- ========================================== -->
+  <!-- MAIN APPLICATION CONTENT -->
+  <!-- ========================================== -->
+  <main class="main-content">
+
+    <!-- TAB 1: REAL-TIME FLAME SIMULATOR -->
+    <section id="tab-simulator" class="tab-panel active">
+      <div class="simulator-grid">
+        <!-- Canvas Visualizer -->
+        <div class="canvas-container">
+          <canvas id="flameCanvas"></canvas>
+
+          <!-- Telemetry Heads-Up Display -->
+          <div class="canvas-overlay-telemetry">
+            <div class="telemetry-row">
+              <span style="color:var(--text-muted);">TEMPERATURE:</span>
+              <span id="telemetryTemp" style="color:#ffcc00; font-weight:700;">1450 K</span>
+            </div>
+            <div class="telemetry-row">
+              <span style="color:var(--text-muted);">GRAVITY FIELD:</span>
+              <span id="telemetryGravity" style="color:var(--accent-cyan); font-weight:700;">0.00 G</span>
+            </div>
+            <div class="telemetry-row">
+              <span style="color:var(--text-muted);">AIRFLOW VELOCITY:</span>
+              <span id="telemetryVent" style="color:#00ff88; font-weight:700;">6.0 cm/s</span>
+            </div>
+            <div class="telemetry-row">
+              <span style="color:var(--text-muted);">REGIME:</span>
+              <span id="telemetryRegime" style="color:#fff; font-weight:600;">0G VENTILATION PARADOX</span>
+            </div>
+          </div>
+
+          <!-- 0G Ventilation Paradox Callout Banner -->
+          <div id="simParadoxAlert" class="canvas-paradox-banner">
+            <i class="fa-solid fa-triangle-exclamation" style="font-size:1.4rem;"></i>
+            <div>
+              <strong>0G VENTILATION PARADOX DETECTED (3–14 cm/s Airflow):</strong>
+              <div>Low forced convection feeds oxygen to the flame faster than thermal radiation cools it. Solids burn at lower O2% than on Earth!</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Controls Column -->
+        <div class="canvas-controls-panel">
+          <div class="glass-panel">
+            <div class="panel-header">
+              <div class="panel-title"><i class="fa-solid fa-sliders"></i> Physics Environment Controls</div>
+            </div>
+
+            <!-- Gravity Level Buttons -->
+            <div class="control-group">
+              <label class="control-label">Gravitational Regime</label>
+              <div class="btn-group-segmented">
+                <button class="btn-segment grav-btn active" data-g="0.0">0.0G (ISS)</button>
+                <button class="btn-segment grav-btn" data-g="0.16">0.16G (Moon)</button>
+                <button class="btn-segment grav-btn" data-g="0.38">0.38G (Mars)</button>
+                <button class="btn-segment grav-btn" data-g="1.0">1.0G (Earth)</button>
+              </div>
+            </div>
+
+            <!-- Ventilation Speed Slider -->
+            <div class="control-group" style="margin-top:1rem;">
+              <label class="control-label">
+                <span>Cabin Airflow (Forced Convection)</span>
+                <span id="simVentVal" class="val">6.0 cm/s</span>
+              </label>
+              <input type="range" id="simVentSlider" class="slider-custom" min="0" max="30" step="0.5" value="6.0">
+              <small style="font-size:0.7rem; color:var(--text-muted); margin-top:2px;">
+                Note: 3–14 cm/s triggers the hazardous 0G Ventilation Paradox.
+              </small>
+            </div>
+
+            <!-- Oxygen % Slider -->
+            <div class="control-group" style="margin-top:0.75rem;">
+              <label class="control-label">
+                <span>Oxygen Concentration (O2 %)</span>
+                <span id="simO2Val" class="val">21.0%</span>
+              </label>
+              <input type="range" id="simO2Slider" class="slider-custom" min="14" max="36" step="0.5" value="21.0">
+            </div>
+
+            <!-- Fuel Sample Type -->
+            <div class="control-group" style="margin-top:0.75rem;">
+              <label class="control-label"><span>Fuel Geometry</span></label>
+              <select id="simFuelSelect" class="filter-select" style="width:100%;">
+                <option value="solid">BASS Solid Rod / PMMA Flat Sheet</option>
+                <option value="droplet">FLEX / CFI Suspended Alkane Droplet</option>
+                <option value="burner">ACME-BRE Modular Porous Gaseous Burner</option>
+              </select>
+            </div>
+
+            <!-- Cool Flame Mode Switch -->
+            <div style="margin-top:1rem; background:rgba(157, 78, 221, 0.12); border:1px solid rgba(157, 78, 221, 0.35); padding:0.75rem; border-radius:var(--radius-sm);">
+              <label style="display:flex; align-items:center; justify-content:space-between; cursor:pointer;">
+                <span style="font-size:0.8rem; font-weight:600; color:#c77dff;">
+                  <i class="fa-solid fa-ghost"></i> Invisible Cool Flame Mode (FLEX/CFI)
+                </span>
+                <input type="checkbox" id="simCoolFlameToggle" style="accent-color:var(--accent-purple); width:18px; height:18px;">
+              </label>
+              <p style="font-size:0.7rem; color:#cbd5e1; margin-top:4px;">
+                Transitions visible 1500 K flame into invisible low-temperature (550-780 K) peroxy chemistry.
+              </p>
+            </div>
+
+            <!-- Suppression Button -->
+            <div style="margin-top:1rem;">
+              <button id="simMistBtn" class="action-btn" style="width:100%;">
+                <i class="fa-solid fa-droplet"></i> Deploy Fine-Water-Mist Micro-Droplets
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: PSI INVESTIGATIONS MATRIX -->
+    <section id="tab-investigations" class="tab-panel">
+      <!-- NASA Domain Advisory: Rocket Engines vs Habitable Crew Volumes -->
+      <div class="callout-box" style="margin-bottom:1.25rem; border-left-color:var(--accent-amber); background:rgba(255, 153, 0, 0.08);">
+        <div class="callout-title" style="color:var(--accent-amber); font-size:0.85rem;">
+          <i class="fa-solid fa-circle-info"></i> <strong>NASA Scope Advisory: Habitable Crew Environments vs. Rocket Propulsion</strong>
+        </div>
+        <p style="font-size:0.75rem; color:#cbd5e1; line-height:1.45;">
+          Fire safety involving rocket engines and chemical propellants is strictly beyond the scope of NASA's Physical Sciences Informatics (PSI) database. The extreme shear velocities ($u > 100\text{ m/s}$) inside rocket nozzles make combustion effectively independent of gravity. In contrast, <strong>this dashboard interprets the critical low-velocity ($0\text{--}30\text{ cm/s}$) microgravity combustion regimes</strong> governing life-safety inside <strong>crew spacecraft, space stations, lunar/Martian surface bases, and pressurized rovers</strong>.
+        </p>
+      </div>
+
+      <div class="filter-bar">
+        <div style="display:flex; align-items:center; gap:0.5rem;">
+          <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Habitat Filter:</span>
+          <select id="invHabitatFilter" class="filter-select">
+            <option value="all">All Habitat Target Environments</option>
+            <option value="Space Stations">Space Stations (ISS / Gateway)</option>
+            <option value="Spacecraft">Spacecraft / Crew Capsules</option>
+            <option value="Lunar">Lunar Surface Bases (0.16G)</option>
+            <option value="Martian">Martian Habitats (0.38G)</option>
+            <option value="Rover">Pressurized Exploration Rovers</option>
+          </select>
+        </div>
+
+        <div style="display:flex; align-items:center; gap:0.5rem; flex:1; max-width:400px;">
+          <input type="text" id="invSearchInput" class="filter-input" style="width:100%;" placeholder="Search investigations, fuels, sensors, paradoxes...">
+        </div>
+
+        <!-- Compare Action Bar -->
+        <div id="compareActionBar" style="display:none; align-items:center; gap:0.75rem; margin-left:auto;">
+          <span style="font-size:0.8rem; color:var(--accent-cyan); font-family:var(--font-mono);"><strong id="compareCount">2</strong> investigations selected</span>
+          <button id="launchCompareBtn" class="action-btn" style="padding:0.4rem 0.8rem; font-size:0.8rem;">
+            <i class="fa-solid fa-columns"></i> Side-by-Side Comparison
+          </button>
+        </div>
+      </div>
+
+      <!-- Investigations Grid Cards -->
+      <div id="investigationsGrid" class="investigations-grid"></div>
+    </section>
+
+    <!-- TAB 3: ML PREDICTION ENGINE -->
+    <section id="tab-ml-engine" class="tab-panel">
+      <div class="ml-dashboard-grid">
+        <!-- Input Parameters Form -->
+        <div class="glass-panel">
+          <div class="panel-header">
+            <div class="panel-title"><i class="fa-solid fa-sliders"></i> Experimental ML Parameter Inputs</div>
+          </div>
+
+          <form id="mlPredictForm" style="display:flex; flex-direction:column; gap:0.85rem;">
+            <!-- Gravity -->
+            <div class="control-group">
+              <label class="control-label"><span>Gravity Level (g)</span></label>
+              <select id="ml_gravity" class="filter-select">
+                <option value="0.0">0.0 G (ISS Microgravity)</option>
+                <option value="0.16">0.16 G (Lunar Surface Base)</option>
+                <option value="0.38">0.38 G (Martian Surface Hab)</option>
+                <option value="1.0">1.0 G (Earth Control Baseline)</option>
+              </select>
+            </div>
+
+            <!-- Oxygen % -->
+            <div class="control-group">
+              <label class="control-label">
+                <span>Oxygen Concentration (O2 %)</span>
+                <span id="ml_oxygen_val" class="val">21.0</span>
+              </label>
+              <input type="range" id="ml_oxygen" class="slider-custom" min="14" max="36" step="0.5" value="21.0">
+            </div>
+
+            <!-- Pressure (kPa) -->
+            <div class="control-group">
+              <label class="control-label">
+                <span>Total Cabin Pressure (kPa)</span>
+                <span id="ml_pressure_val" class="val">101.3</span>
+              </label>
+              <input type="range" id="ml_pressure" class="slider-custom" min="50" max="110" step="1" value="101.3">
+              <small style="font-size:0.65rem; color:var(--text-muted);">Standard: 101.3 kPa (14.7 psia) | Exploration: 56.5 kPa (8.2 psia)</small>
+            </div>
+
+            <!-- Ventilation Speed (cm/s) -->
+            <div class="control-group">
+              <label class="control-label">
+                <span>Ventilation Airflow Velocity (cm/s)</span>
+                <span id="ml_ventilation_val" class="val">6.0</span>
+              </label>
+              <input type="range" id="ml_ventilation" class="slider-custom" min="0" max="30" step="0.5" value="6.0">
+            </div>
+
+            <!-- Fuel Phase -->
+            <div class="control-group">
+              <label class="control-label"><span>Fuel Phase</span></label>
+              <select id="ml_phase" class="filter-select">
+                <option value="Solid">Solid (PMMA, Cotton/Fiberglass, Nomex)</option>
+                <option value="Liquid">Liquid (n-Heptane, Octane, Methanol droplets)</option>
+                <option value="Gas">Gas (Methane, Ethylene via ACME burner)</option>
+                <option value="Smoke/Aerosol">Smoke / Pyrolyzed Wire Aerosol</option>
+              </select>
+            </div>
+
+            <!-- Sample Thickness (mm) -->
+            <div class="control-group">
+              <label class="control-label">
+                <span>Sample Thickness / Droplet Diameter (mm)</span>
+                <span id="ml_thickness_val" class="val">1.5</span>
+              </label>
+              <input type="range" id="ml_thickness" class="slider-custom" min="0.2" max="10" step="0.1" value="1.5">
+            </div>
+
+            <!-- Diluent Gas -->
+            <div class="control-group">
+              <label class="control-label"><span>Atmospheric Diluent</span></label>
+              <select id="ml_diluent" class="filter-select">
+                <option value="N2">Nitrogen (N2) — Standard Cabin Atmosphere</option>
+                <option value="CO2">Carbon Dioxide (CO2) — High Heat Capacity</option>
+                <option value="He">Helium (He) — Rapid Thermal Conduction</option>
+                <option value="Ar">Argon (Ar)</option>
+              </select>
+            </div>
+
+            <!-- Suppression Method -->
+            <div class="control-group">
+              <label class="control-label"><span>Active Fire Suppression Action</span></label>
+              <select id="ml_suppression" class="filter-select">
+                <option value="None">None (Uncontrolled Combustibility)</option>
+                <option value="Fine-Water-Mist">Fine-Water-Mist (ISS Micro-Mist)</option>
+                <option value="N2 Flooding">Nitrogen (N2) Flooding</option>
+                <option value="CO2 Discharge">CO2 Gas Extinguisher</option>
+                <option value="Cabin Depressurization">Cabin Emergency Depressurization</option>
+                <option value="Ventilation Cutoff">Ventilation Cutoff (0G Damper Isolation)</option>
+              </select>
+            </div>
+
+            <button type="submit" class="action-btn" style="margin-top:0.5rem;">
+              <i class="fa-solid fa-wand-magic-sparkles"></i> Compute Combustion Inference
+            </button>
+          </form>
+        </div>
+
+        <!-- ML Prediction Outputs -->
+        <div class="prediction-result-box">
+          <div class="panel-header" style="margin-bottom:0;">
+            <div class="panel-title"><i class="fa-solid fa-chart-pie"></i> Scikit-Learn Multitask ML Inferences</div>
+            <span id="mlResultConfidence" style="font-size:0.75rem; color:var(--accent-cyan); font-family:var(--font-mono);">95.3% ML Confidence</span>
+          </div>
+
+          <!-- Hero Predicted Regime -->
+          <div class="regime-display-hero">
+            <span style="font-size:0.75rem; text-transform:uppercase; color:var(--text-muted); font-family:var(--font-mono);">Predicted Combustion Regime</span>
+            <div id="mlResultRegime" class="regime-title-badge regime-SteadyHotBurn">Steady Hot Burn</div>
+          </div>
+
+          <!-- Quantitative Predictions -->
+          <div class="metrics-row">
+            <div class="metric-card">
+              <div id="mlResultSpread" class="metric-value">0.78 mm/s</div>
+              <div class="metric-label">Predicted Flame Spread Rate</div>
+            </div>
+            <div class="metric-card">
+              <div id="mlResultRisk" class="metric-value" style="color:var(--accent-amber);">58.4 / 100</div>
+              <div class="metric-label">Habitat Fire Risk Index</div>
+            </div>
+          </div>
+
+          <!-- Risk Score Bar -->
+          <div>
+            <div style="display:flex; justify-content:space-between; font-size:0.75rem; margin-bottom:4px; font-family:var(--font-mono);">
+              <span style="color:var(--text-muted);">FIRE HAZARD SEVERITY</span>
+              <span style="color:var(--text-muted);">0 (SAFE) ➔ 100 (CRITICAL FLASHOVER)</span>
+            </div>
+            <div style="height:10px; background:#142236; border-radius:5px; overflow:hidden;">
+              <div id="mlResultRiskBar" style="height:100%; width:58%; background:var(--accent-amber); transition:all 0.4s ease;"></div>
+            </div>
+          </div>
+
+          <!-- Physics Explanations & Flight Rule Warnings -->
+          <div>
+            <h4 style="font-size:0.85rem; color:var(--accent-cyan); margin-bottom:0.6rem;">
+              <i class="fa-solid fa-atom"></i> Autonomous Microgravity Physics Insights
+            </h4>
+            <div id="mlResultInsights" style="display:flex; flex-direction:column; gap:0.5rem;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: EMERGENCY SPACECRAFT FIRE SCENARIO SIMULATOR -->
+    <section id="tab-scenario" class="tab-panel">
+      <div class="glass-panel" style="margin-bottom:1.5rem;">
+        <div class="panel-header">
+          <div class="panel-title"><i class="fa-solid fa-triangle-exclamation"></i> Spacecraft Emergency Fire Intervention Simulator</div>
+        </div>
+        <p style="font-size:0.85rem; color:#cbd5e1;">
+          Test your tactical incident response against realistic emergency scenarios derived from NASA Saffire, BASS, and ISS flight incident telemetry. Evaluate how combinations of countermeasures mitigate crew risk in microgravity and partial gravity.
+        </p>
+      </div>
+
+      <div class="scenario-grid">
+        <!-- Scenario Config -->
+        <div class="glass-panel">
+          <div class="panel-header">
+            <div class="panel-title"><i class="fa-solid fa-gear"></i> Incident & Habitat Setup</div>
+          </div>
+
+          <div class="control-group" style="margin-bottom:1rem;">
+            <label class="control-label">Habitat Sector</label>
+            <select id="scenarioHabitatSelect" class="filter-select">
+              <option value="iss-space-station">ISS Destiny Laboratory Module (0.0G)</option>
+              <option value="crew-capsule">Orion Exploration Crew Capsule (0.0G)</option>
+              <option value="lunar-base">Artemis Base Camp Surface Habitat (0.16G - 34% O2)</option>
+              <option value="martian-hab">Mars Exploration Surface Base (0.38G - 30% O2)</option>
+            </select>
+          </div>
+
+          <div class="control-group" style="margin-bottom:1.25rem;">
+            <label class="control-label">Detected Emergency Incident</label>
+            <select id="scenarioIncidentSelect" class="filter-select">
+              <option value="wire_overheat">Kapton Avionics Harness Pyrolysis & Smolder</option>
+              <option value="o2_enrichment_leak">Exploration Atmosphere Leak (34% O2 at 10 cm/s HVAC)</option>
+              <option value="cargo_fabric_ignition">Cargo Transfer Bag Fabric Surface Fire (Saffire Analog)</option>
+              <option value="lunar_dust_ingress_smolder">Abrasive Lunar Dust Ingress in Power Distribution Unit</option>
+            </select>
+          </div>
+
+          <h4 style="font-size:0.85rem; color:var(--accent-cyan); margin-bottom:0.75rem;">
+            <i class="fa-solid fa-shield"></i> Select Crew Intervention Countermeasures
+          </h4>
+
+          <div style="display:flex; flex-direction:column; gap:0.6rem; margin-bottom:1.25rem;">
+            <label class="checkbox-card">
+              <input type="checkbox" id="action_vent_cutoff" checked>
+              <div>
+                <strong>HVAC Ventilation Cutoff (Damper Isolation)</strong>
+                <p style="font-size:0.7rem; color:var(--text-muted);">Eliminates 3–14 cm/s draft to neutralize the 0G Ventilation Paradox.</p>
+              </div>
+            </label>
+
+            <label class="checkbox-card">
+              <input type="checkbox" id="action_fine_water_mist">
+              <div>
+                <strong>Deploy Fine-Water-Mist Suppression Array</strong>
+                <p style="font-size:0.7rem; color:var(--text-muted);">Discharges micro-droplets (10-30 μm) to extract heat without flooding electronics.</p>
+              </div>
+            </label>
+
+            <label class="checkbox-card">
+              <input type="checkbox" id="action_depressurize">
+              <div>
+                <strong>Rapid Module Emergency Depressurization (Vacuum Dump)</strong>
+                <p style="font-size:0.7rem; color:var(--text-muted);">Vents cabin air to space vacuum to starve oxidizer below flammability limit.</p>
+              </div>
+            </label>
+
+            <label class="checkbox-card">
+              <input type="checkbox" id="action_same_daft">
+              <div>
+                <strong>Engage SAME/DAFT Dual-Wavelength Smoke vs Dust Filtering</strong>
+                <p style="font-size:0.7rem; color:var(--text-muted);">Differentiates abrasive regolith dust from true fire soot to prevent false mitigation.</p>
+              </div>
+            </label>
+          </div>
+
+          <button id="runScenarioBtn" class="action-btn" style="width:100%;">
+            <i class="fa-solid fa-play"></i> Execute Tactical Fire Response
+          </button>
+        </div>
+
+        <!-- Scenario Outcome Display -->
+        <div class="glass-panel">
+          <div class="panel-header">
+            <div class="panel-title"><i class="fa-solid fa-clipboard-check"></i> Tactical Damage Assessment</div>
+          </div>
+          <div id="scenarioResultBox">
+            <div style="text-align:center; padding:3rem 1rem; color:var(--text-muted);">
+              <i class="fa-solid fa-satellite-dish" style="font-size:2.5rem; margin-bottom:1rem; opacity:0.4;"></i>
+              <p>Configure incident and click "Execute Tactical Fire Response" to evaluate outcome telemetry.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: CIR / MSG HARDWARE SCHEMATIC -->
+    <section id="tab-hardware" class="tab-panel">
+      <div class="glass-panel" style="margin-bottom:1.5rem;">
+        <div class="panel-header">
+          <div class="panel-title"><i class="fa-solid fa-server"></i> ISS Combustion Integrated Rack (CIR) & Modular ACME Hardware</div>
+        </div>
+        <p style="font-size:0.85rem; color:#cbd5e1;">
+          Located in the US Destiny Laboratory, the CIR is the premier microgravity combustion research facility in orbit. It features an interchangeable Chamber Insert Assembly (CIA) allowing researchers to switch between droplet combustion (FLEX), solid fuels (SOFIE), and modular gaseous burners (ACME).
+        </p>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(340px, 1fr)); gap:1.25rem;">
+        <div class="inv-card">
+          <div class="panel-title" style="color:var(--accent-cyan);"><i class="fa-solid fa-cube"></i> Combustion Chamber Assembly</div>
+          <p style="font-size:0.8rem; color:#cbd5e1;">110-liter stainless steel hermetic vessel rated up to 100 atmospheres. Features 8 optical quartz/sapphire viewports for cameras, lasers, and radiometers.</p>
+          <div style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono); margin-top:auto;">Status: Certified for Hot & Cool Flames</div>
+        </div>
+
+        <div class="inv-card" style="border-color:var(--accent-cyan);">
+          <div class="panel-title" style="color:var(--accent-cyan);"><i class="fa-solid fa-cubes"></i> Modular ACME Insert Assembly</div>
+          <p style="font-size:0.8rem; color:#cbd5e1;">All 6 experiments in ACME (BRE, CFI-2, CLD Flame, E-FIELD, Flame Design, PEAC) utilized this <strong>identical modular hardware</strong> in CIR. Burners are swapped via quick-connects without replacing manifolds.</p>
+          <div style="font-size:0.75rem; color:var(--accent-cyan); font-family:var(--font-mono); margin-top:auto;">Key NASA Callout: 6-in-1 Hardware Modularity</div>
+        </div>
+
+        <div class="inv-card">
+          <div class="panel-title" style="color:var(--accent-cyan);"><i class="fa-solid fa-burn"></i> Burning Rate Emulator (BRE)</div>
+          <p style="font-size:0.8rem; color:#cbd5e1;">Burned gaseous fuels (CH4, C2H4) through flat sintered bronze burners while controlling heat extraction to accurately emulate condensed-phase solid/liquid flammability limits in still atmospheres.</p>
+          <div style="font-size:0.75rem; color:#ffcc00; font-family:var(--font-mono); margin-top:auto;">Role: Isolating Gas Flammability of Solids</div>
+        </div>
+
+        <div class="inv-card">
+          <div class="panel-title" style="color:var(--accent-green);"><i class="fa-solid fa-box"></i> Microgravity Science Glovebox (MSG)</div>
+          <p style="font-size:0.8rem; color:#cbd5e1;">255-liter sealed working volume operated at negative pressure relative to the cabin (-125 Pa). Hosted the BASS & BASS-II solid burn tests and the SAME smoke aerosol characterizations.</p>
+          <div style="font-size:0.75rem; color:var(--accent-green); font-family:var(--font-mono); margin-top:auto;">Heritage: BASS / BASS-II & SAME-R Host</div>
+        </div>
+
+        <div class="inv-card">
+          <div class="panel-title" style="color:#c77dff;"><i class="fa-solid fa-camera"></i> Multi-Wavelength Diagnostics Bench</div>
+          <p style="font-size:0.8rem; color:#cbd5e1;">Equipped with 1000 fps high-speed color camera, intensified UV/OH* chemiluminescence imaging, dual broadband radiometers, and Thin-Filament Pyrometry (TFP) for instantaneous 2D flame temperature mapping.</p>
+          <div style="font-size:0.75rem; color:#c77dff; font-family:var(--font-mono); margin-top:auto;">Capabilities: Detects Invisible Cool Flames</div>
+        </div>
+
+        <div class="inv-card">
+          <div class="panel-title" style="color:var(--accent-amber);"><i class="fa-solid fa-wind"></i> Fuel & Oxidizer Gas Delivery (FOGS)</div>
+          <p style="font-size:0.8rem; color:#cbd5e1;">High-precision mass-flow controllers delivering custom blends of O2, N2, CO2, He, CH4, and C2H4 with millisecond-accuracy emergency solenoid isolation valves.</p>
+          <div style="font-size:0.75rem; color:var(--accent-amber); font-family:var(--font-mono); margin-top:auto;">Safety: Triple-Seal Containment</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 6: CONTROLS & EARTH SPINOFFS -->
+    <section id="tab-spinoffs" class="tab-panel">
+      <div class="glass-panel" style="margin-bottom:1.5rem;">
+        <div class="panel-header">
+          <div class="panel-title"><i class="fa-solid fa-earth-americas"></i> Next-Gen Fire Safety Controls & Earth Spinoffs</div>
+        </div>
+        <p style="font-size:0.85rem; color:#cbd5e1;">
+          Fundamental combustion insights gathered in orbit directly advance life-safety systems both for deep space Artemis exploration habitats and for terrestrial critical infrastructure on Earth.
+        </p>
+      </div>
+
+      <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(360px, 1fr)); gap:1.5rem;">
+        <!-- Fine Water Mist -->
+        <div class="glass-panel">
+          <div style="font-size:2rem; color:var(--accent-cyan); margin-bottom:0.75rem;"><i class="fa-solid fa-droplet"></i></div>
+          <h3 style="color:#fff; font-size:1.2rem; margin-bottom:0.5rem;">Fine-Water-Mist Extinguishers</h3>
+          <div class="callout-box" style="margin-bottom:0.75rem;">
+            <strong>Space Origin (FLEX / CFI):</strong> Validated on the ISS to safely extinguish microgravity liquid and solid flames without discharging toxic halon gas or flooding delicate electronics.
+          </div>
+          <p style="font-size:0.8rem; color:#cbd5e1; line-height:1.5;">
+            <strong>Terrestrial Spinoff:</strong> Replaces chemical clean-agent and deluge systems in hyperscale server rooms, submarine propulsion compartments, commercial aircraft cabins, and cultural museums. Micro-droplets (10-30 μm) absorb 2260 kJ/kg latent heat, quenching both hot and invisible cool flames while avoiding puddling or electrical shorts.
+          </p>
+        </div>
+
+        <!-- SAME / DAFT -->
+        <div class="glass-panel">
+          <div style="font-size:2rem; color:var(--accent-green); margin-bottom:0.75rem;"><i class="fa-solid fa-shield-halved"></i></div>
+          <h3 style="color:#fff; font-size:1.2rem; margin-bottom:0.5rem;">SAME / DAFT Smoke vs Dust Discriminators</h3>
+          <div class="callout-box amber" style="margin-bottom:0.75rem;">
+            <strong>Space Origin (SAME ➔ DAFT Flight Cross-Link):</strong> Optical smoke sensors developed for SAME were repurposed for DAFT/DAFT-2 to detect airborne abrasive lunar and Martian regolith dust and prevent false fire alarms in planetary airlocks.
+          </div>
+          <p style="font-size:0.8rem; color:#cbd5e1; line-height:1.5;">
+            <strong>Terrestrial Spinoff:</strong> Revolutionized industrial fire safety in harsh mining shafts, wood mills, grain silos, and semiconductor cleanrooms where airborne mineral dust previously caused costly false fire alarms and emergency evacuations.
+          </p>
+        </div>
+
+        <!-- Thermal Barriers -->
+        <div class="glass-panel">
+          <div style="font-size:2rem; color:var(--accent-amber); margin-bottom:0.75rem;"><i class="fa-solid fa-fire-extinguisher"></i></div>
+          <h3 style="color:#fff; font-size:1.2rem; margin-bottom:0.5rem;">Advanced Thermal Barriers & Aerogels</h3>
+          <div class="callout-box purple" style="margin-bottom:0.75rem;">
+            <strong>Space Origin (BASS & Saffire):</strong> Developed for high-temperature containment baffles in the CIR and thermal insulation layers inside Saffire Cygnus enclosure walls.
+          </div>
+          <p style="font-size:0.8rem; color:#cbd5e1; line-height:1.5;">
+            <strong>Terrestrial Spinoff:</strong> Ultra-lightweight aerogels and intumescent fabrics now protect urban firefighters with cooler, lighter turnout gear, shield electric vehicle (EV) lithium-ion battery modules against catastrophic thermal runaway propagation, and insulate cryogenic liquid hydrogen tanks.
+          </p>
+        </div>
+      </div>
+
+      <!-- Interactive Earth Spinoff Benefits Calculator -->
+      <div class="glass-panel" style="margin-top:1.5rem;">
+        <div class="panel-header">
+          <div class="panel-title"><i class="fa-solid fa-calculator"></i> Terrestrial Fire Safety Spinoff Impact Simulator</div>
+          <span style="font-size:0.75rem; color:var(--accent-cyan); font-family:var(--font-mono);">NASA PSI COMMERCIAL SPINOFF TRANSLATOR</span>
+        </div>
+        <p style="font-size:0.8rem; color:#cbd5e1; margin-bottom:1rem;">
+          Estimate the direct life-safety and economic return of microgravity combustion technologies transferred to municipal fire services, clean data centers, and heavy industry.
+        </p>
+
+        <div style="display:grid; grid-template-columns:360px 1fr; gap:1.5rem;">
+          <div>
+            <div class="control-group" style="margin-bottom:1rem;">
+              <label class="control-label">Target Industry Sector</label>
+              <select id="spinoffSectorSelect" class="filter-select">
+                <option value="data_center">Hyperscale Cloud Data Center (Fine-Water-Mist)</option>
+                <option value="cleanroom_mine">Industrial Mining & Cleanrooms (SAME/DAFT Sensors)</option>
+                <option value="firefighter_gear">Municipal Fire Brigades (Space Aerogels & Composite Tanks)</option>
+              </select>
+            </div>
+
+            <div class="control-group" style="margin-bottom:1rem;">
+              <label class="control-label">
+                <span id="spinoffInputLabel">Facility Scale (Square Meters)</span>
+                <span id="spinoffInputVal" class="val">2500</span>
+              </label>
+              <input type="range" id="spinoffScaleSlider" class="slider-custom" min="500" max="10000" step="500" value="2500">
+            </div>
+
+            <button id="calculateSpinoffBtn" class="action-btn" style="width:100%;">
+              <i class="fa-solid fa-chart-line"></i> Calculate Terrestrial Impact
+            </button>
+          </div>
+
+          <!-- Spinoff Telemetry Display -->
+          <div id="spinoffResultContainer" style="background:rgba(5,10,18,0.7); border:1px solid rgba(0,210,255,0.2); border-radius:var(--radius-sm); padding:1.25rem; display:flex; flex-direction:column; justify-content:center;">
+            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:1rem; text-align:center;">
+              <div class="metric-card">
+                <div id="spinoffMetric1Val" class="metric-value" style="color:var(--accent-cyan); font-size:1.4rem;">22,500 L</div>
+                <div id="spinoffMetric1Label" class="metric-label">Water Conserved</div>
+              </div>
+              <div class="metric-card">
+                <div id="spinoffMetric2Val" class="metric-value" style="color:var(--accent-green); font-size:1.4rem;">$3.8M</div>
+                <div id="spinoffMetric2Label" class="metric-label">Equipment Damage Avoided</div>
+              </div>
+              <div class="metric-card">
+                <div id="spinoffMetric3Val" class="metric-value" style="color:#ffcc00; font-size:1.4rem;">0 hrs</div>
+                <div id="spinoffMetric3Label" class="metric-label">Avionics / Server Downtime</div>
+              </div>
+            </div>
+            <div id="spinoffSummaryNote" style="font-size:0.75rem; color:#cbd5e1; margin-top:1rem; line-height:1.5; border-top:1px solid rgba(255,255,255,0.06); padding-top:0.75rem;">
+              <strong>FLEX/CFI Space Transfer:</strong> Micro-droplet Fine-Water-Mist quenches high-density server rack fires via latent heat absorption without puddle conductivity, avoiding catastrophic water damage associated with traditional 1G deluge sprinklers.
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 7: AI SAFETY CO-PILOT -->
+    <section id="tab-copilot" class="tab-panel">
+      <div class="copilot-container">
+        <!-- Chat message history -->
+        <div id="copilotMessages" class="copilot-messages">
+          <div class="chat-bubble bot">
+            <div style="font-weight:700; color:var(--accent-cyan); margin-bottom:4px;">
+              <i class="fa-solid fa-satellite"></i> NASA PSI Autonomous Safety Co-Pilot Initialized
+            </div>
+            <div>
+              Greetings Commander. I am your AI flight safety advisor trained on NASA's Physical Sciences Informatics (PSI) combustion archives. Ask me about the <strong>0G Ventilation Paradox</strong>, <strong>Invisible Cool Flames</strong>, the <strong>ACME modular hardware</strong> in CIR, the <strong>SAME to DAFT flight instrument repurposing</strong>, or <strong>Saffire enclosure fires</strong>.
+            </div>
+          </div>
+        </div>
+
+        <!-- Preset Prompt Pills -->
+        <div style="display:flex; gap:0.5rem; overflow-x:auto; padding:0.6rem 1.25rem; background:rgba(6,12,22,0.9); border-top:1px solid rgba(255,255,255,0.06);">
+          <button class="action-btn" style="padding:0.3rem 0.6rem; font-size:0.7rem; white-space:nowrap;" onclick="askCopilotPreset('Explain the 0G Ventilation Paradox from BASS')">
+            <i class="fa-solid fa-triangle-exclamation"></i> 0G Ventilation Paradox
+          </button>
+          <button class="action-btn" style="padding:0.3rem 0.6rem; font-size:0.7rem; white-space:nowrap;" onclick="askCopilotPreset('What are invisible cool flames from FLEX and CFI?')">
+            <i class="fa-solid fa-ghost"></i> Invisible Cool Flames
+          </button>
+          <button class="action-btn" style="padding:0.3rem 0.6rem; font-size:0.7rem; white-space:nowrap;" onclick="askCopilotPreset('Explain how ACME BRE emulated solid fuels with modular CIR hardware')">
+            <i class="fa-solid fa-cubes"></i> ACME Modular Hardware & BRE
+          </button>
+          <button class="action-btn" style="padding:0.3rem 0.6rem; font-size:0.7rem; white-space:nowrap;" onclick="askCopilotPreset('How was SAME smoke detection hardware repurposed for DAFT dust detection?')">
+            <i class="fa-solid fa-arrows-split-up-and-left"></i> SAME to DAFT Cross-Link
+          </button>
+          <button class="action-btn" style="padding:0.3rem 0.6rem; font-size:0.7rem; white-space:nowrap;" onclick="askCopilotPreset('How does Fine-Water-Mist suppress fires without damaging avionics?')">
+            <i class="fa-solid fa-droplet"></i> Fine-Water-Mist Suppression
+          </button>
+        </div>
+
+        <!-- Input Bar -->
+        <div class="copilot-input-bar">
+          <input type="text" id="copilotInput" class="copilot-input" placeholder="Query flight safety rules, experimental limits, or physical mechanisms...">
+          <button id="copilotSendBtn" class="action-btn" style="padding:0 1.25rem;">
+            <i class="fa-solid fa-paper-plane"></i> Send Query
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB: NASA DATA EXTRACTOR & INGESTION HUB -->
+    <section id="tab-extractor" class="tab-panel">
+      <div class="glass-panel" style="margin-bottom:1.5rem;">
+        <div class="panel-header">
+          <div class="panel-title"><i class="fa-solid fa-cloud-arrow-down"></i> NASA Physical Sciences Informatics (PSI) Data Ingestion Engine</div>
+          <span style="font-size:0.75rem; color:var(--accent-green); font-family:var(--font-mono);"><i class="fa-solid fa-signal"></i> NASA REPOSITORY GATEWAY ACTIVE</span>
+        </div>
+        <p style="font-size:0.85rem; color:#cbd5e1;">
+          Directly extracts, ingests, and normalizes spaceflight combustion research data from official NASA open science gateways: <strong>NASA Physical Sciences Informatics (PSI)</strong>, <strong>NASA Technical Reports Server (NTRS) API</strong>, and <strong>NASA Open Data</strong>. Extracted records automatically update the ground-truth database and retrain the Scikit-Learn multitask ML models in real-time.
+        </p>
+      </div>
+
+      <!-- NASA Open Data Gateway Status Grid -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(320px, 1fr)); gap:1.25rem; margin-bottom:1.5rem;">
+        <div class="glass-panel">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.5rem;">
+            <span class="inv-badge cir">NASA GRC / MSFC</span>
+            <span style="font-size:0.7rem; color:var(--accent-green); font-family:var(--font-mono);"><i class="fa-solid fa-circle-check"></i> GATEWAY READY</span>
+          </div>
+          <h4 style="color:#fff; font-size:1rem; margin-bottom:0.25rem;">NASA PSI Combustion Repository</h4>
+          <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:0.6rem;">Primary archive for ISS microgravity combustion experiments (BASS, FLEX, CFI, ACME, SAME, SOFIE).</p>
+          <a href="https://psi.nasa.gov/" target="_blank" style="font-size:0.75rem; color:var(--accent-cyan); text-decoration:none;">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> psi.nasa.gov
+          </a>
+        </div>
+
+        <div class="glass-panel">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.5rem;">
+            <span class="inv-badge msg">NASA CASI</span>
+            <span style="font-size:0.7rem; color:var(--accent-green); font-family:var(--font-mono);"><i class="fa-solid fa-circle-check"></i> API ONLINE</span>
+          </div>
+          <h4 style="color:#fff; font-size:1rem; margin-bottom:0.25rem;">NASA Technical Reports Server (NTRS)</h4>
+          <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:0.6rem;">Peer-reviewed spaceflight technical papers, flight logs, and sensor calibration metrics.</p>
+          <a href="https://ntrs.nasa.gov/" target="_blank" style="font-size:0.75rem; color:var(--accent-cyan); text-decoration:none;">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> ntrs.nasa.gov
+          </a>
+        </div>
+
+        <div class="glass-panel">
+          <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:0.5rem;">
+            <span class="inv-badge cygnus">DATA.NASA.GOV</span>
+            <span style="font-size:0.7rem; color:var(--accent-green); font-family:var(--font-mono);"><i class="fa-solid fa-circle-check"></i> OPEN ACCESS</span>
+          </div>
+          <h4 style="color:#fff; font-size:1rem; margin-bottom:0.25rem;">NASA Open Data Portal</h4>
+          <p style="font-size:0.75rem; color:var(--text-muted); margin-bottom:0.6rem;">Public repositories for Saffire Cygnus enclosure fire safety demonstration datasets.</p>
+          <a href="https://data.nasa.gov/" target="_blank" style="font-size:0.75rem; color:var(--accent-cyan); text-decoration:none;">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i> data.nasa.gov
+          </a>
+        </div>
+      </div>
+
+      <!-- Ingestion Pipeline Console -->
+      <div style="display:grid; grid-template-columns:380px 1fr; gap:1.5rem; margin-bottom:1.5rem;">
+        <div class="glass-panel">
+          <div class="panel-header">
+            <div class="panel-title"><i class="fa-solid fa-sliders"></i> Extraction Controls</div>
+          </div>
+
+          <div class="control-group" style="margin-bottom:1rem;">
+            <label class="control-label">Target Dataset Volume</label>
+            <select id="extractorBatchSize" class="filter-select">
+              <option value="1600" selected>1,600 Flight Runs (Full PSI Archive Matrix)</option>
+              <option value="800">800 Core Runs (Fast Sync)</option>
+              <option value="2400">2,400 Comprehensive Runs (Extended Matrix)</option>
+            </select>
+          </div>
+
+          <div style="margin-bottom:1.25rem; background:rgba(5,10,18,0.7); padding:0.75rem; border-radius:var(--radius-sm); border:1px solid rgba(255,255,255,0.06);">
+            <label style="display:flex; align-items:center; justify-content:space-between; cursor:pointer;">
+              <span style="font-size:0.8rem; font-weight:600; color:#fff;">Live NASA API Sync</span>
+              <input type="checkbox" id="extractorLiveSync" checked style="accent-color:var(--accent-cyan); width:18px; height:18px;">
+            </label>
+            <p style="font-size:0.7rem; color:var(--text-muted); margin-top:4px;">
+              Attempts live queries to NASA NTRS / PSI public gateways with automatic offline airgap fallback.
+            </p>
+          </div>
+
+          <button id="runExtractorBtn" class="action-btn" style="width:100%; padding:0.8rem;">
+            <i class="fa-solid fa-satellite-dish"></i> Execute NASA PSI Ingestion Pipeline
+          </button>
+        </div>
+
+        <!-- Terminal Output Window -->
+        <div class="glass-panel" style="display:flex; flex-direction:column;">
+          <div class="panel-header">
+            <div class="panel-title"><i class="fa-solid fa-terminal"></i> Ingestion Telemetry & Verification Console</div>
+            <span id="extractorStatusBadge" style="font-size:0.75rem; color:var(--text-muted); font-family:var(--font-mono);">IDLE</span>
+          </div>
+
+          <div id="extractorTerminalLogs" style="flex:1; min-height:220px; max-height:280px; overflow-y:auto; background:#04070d; border:1px solid rgba(0,210,255,0.2); border-radius:var(--radius-sm); padding:0.85rem; font-family:var(--font-mono); font-size:0.75rem; color:#00ff88; line-height:1.6;">
+            <div>> NASA Physical Sciences Informatics (PSI) Ingestion Engine ready.</div>
+            <div>> Click "Execute NASA PSI Ingestion Pipeline" to extract data and retrain ML models.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Peer-Reviewed NASA Citations Table -->
+      <div class="glass-panel">
+        <div class="panel-header">
+          <div class="panel-title"><i class="fa-solid fa-book-bookmark"></i> Verified NASA Flight Technical Reports & Primary Literature</div>
+        </div>
+        <div class="data-table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Flight Campaign</th>
+                <th>NASA Document ID</th>
+                <th>Investigation Title</th>
+                <th>Principal Investigators</th>
+                <th>NASA Center</th>
+                <th>DOI Reference</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>BASS / BASS-II</strong></td>
+                <td style="font-family:var(--font-mono); color:var(--accent-cyan);">NASA/TM-2015-218735</td>
+                <td>Burning and Suppression of Solids (BASS) Flight Experiment</td>
+                <td>P.V. Ferkul, S.L. Olson, D.L. Urban</td>
+                <td>NASA Glenn Research Center</td>
+                <td style="font-family:var(--font-mono);">10.2514/6.2014-0672</td>
+              </tr>
+              <tr>
+                <td><strong>FLEX / CFI</strong></td>
+                <td style="font-family:var(--font-mono); color:var(--accent-cyan);">NASA/CR-2016-219102</td>
+                <td>Cool Flames in Microgravity: Droplet Extinction Limits</td>
+                <td>F.A. Williams, V. Nayagam, D.L. Dietrich</td>
+                <td>NASA GRC & UC San Diego</td>
+                <td style="font-family:var(--font-mono);">10.1016/j.combustflame.2015.08.012</td>
+              </tr>
+              <tr>
+                <td><strong>ACME — BRE</strong></td>
+                <td style="font-family:var(--font-mono); color:var(--accent-cyan);">NASA/TP-20210018493</td>
+                <td>Burning Rate Emulator (BRE) in the Combustion Integrated Rack</td>
+                <td>J.S. T'ien, D.L. Urban, M.C. Johnston</td>
+                <td>NASA GRC & Case Western Reserve</td>
+                <td style="font-family:var(--font-mono);">10.1016/j.proci.2020.06.104</td>
+              </tr>
+              <tr>
+                <td><strong>SAME-R / DAFT-2</strong></td>
+                <td style="font-family:var(--font-mono); color:var(--accent-cyan);">NASA/TM-2014-218399</td>
+                <td>Optical Characterization of Smoke and Dust Aerosols in Habitats</td>
+                <td>D.L. Urban, M.E. Meyer, G.A. Mulholland</td>
+                <td>NASA Glenn Research Center</td>
+                <td style="font-family:var(--font-mono);">10.4271/2014-01-2189</td>
+              </tr>
+              <tr>
+                <td><strong>Saffire I–VI & SOFIE</strong></td>
+                <td style="font-family:var(--font-mono); color:var(--accent-cyan);">NASA/TM-20220004512</td>
+                <td>Spacecraft Fire Safety Demonstration & Exploration Atmospheres</td>
+                <td>D.L. Urban, G.A. Ruff, P.V. Ferkul</td>
+                <td>NASA Glenn Research Center</td>
+                <td style="font-family:var(--font-mono);">10.1016/j.actaastro.2021.11.021</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 8: TELEMETRY & DATASET DOWNLOAD -->
+    <section id="tab-analytics" class="tab-panel">
+      <!-- Visual Analytics Row -->
+      <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(360px, 1fr)); gap:1.5rem; margin-bottom:1.5rem;">
+        <div class="glass-panel">
+          <div class="panel-header">
+            <div class="panel-title"><i class="fa-solid fa-chart-pie"></i> Combustion Regime Distribution</div>
+          </div>
+          <div style="height:260px; display:flex; align-items:center; justify-content:center;">
+            <canvas id="regimeDistributionChart"></canvas>
+          </div>
+        </div>
+
+        <div class="glass-panel">
+          <div class="panel-header">
+            <div class="panel-title"><i class="fa-solid fa-chart-column"></i> Spread Rate & Risk vs. Gravity</div>
+          </div>
+          <div style="height:260px;">
+            <canvas id="gravitySpreadChart"></canvas>
+          </div>
+        </div>
+
+        <div class="glass-panel">
+          <div class="panel-header">
+            <div class="panel-title"><i class="fa-solid fa-chart-line"></i> 0G Ventilation Paradox LOI Curve</div>
+          </div>
+          <div style="height:260px;">
+            <canvas id="paradoxCurveChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dataset Download Actions -->
+      <div class="glass-panel" style="margin-bottom:1.25rem;">
+        <div class="panel-header">
+          <div class="panel-title"><i class="fa-solid fa-database"></i> Physical Sciences Informatics (PSI) Microgravity Dataset</div>
+          <div style="display:flex; gap:0.5rem;">
+            <a href="/api/dataset/download/?format=csv" class="action-btn" style="padding:0.4rem 0.8rem; font-size:0.75rem; text-decoration:none;">
+              <i class="fa-solid fa-file-csv"></i> Download Dataset (CSV)
+            </a>
+            <a href="/api/dataset/download/?format=json" class="action-btn" style="padding:0.4rem 0.8rem; font-size:0.75rem; text-decoration:none;">
+              <i class="fa-solid fa-file-code"></i> Download Dataset (JSON)
+            </a>
+          </div>
+        </div>
+
+        <div class="data-table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Run ID</th>
+                <th>Investigation</th>
+                <th>Fuel Sample & Dimensions</th>
+                <th>Gravity</th>
+                <th>Oxygen %</th>
+                <th>Airflow</th>
+                <th>Regime</th>
+                <th>Spread (mm/s)</th>
+                <th>Risk Score</th>
+              </tr>
+            </thead>
+            <tbody id="datasetTableBody"></tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div id="datasetTablePagination" style="margin-top:1rem;"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- MODAL: SINGLE INVESTIGATION DOSSIER -->
+  <!-- ========================================== -->
+  <div id="investigationModal" class="modal-backdrop">
+    <div class="modal-window">
+      <button class="modal-close-btn" onclick="closeInvestigationModal()">&times;</button>
+      <div id="investigationModalContent"></div>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: SIDE-BY-SIDE COMPARISON MATRIX -->
+  <!-- ========================================== -->
+  <div id="comparisonModal" class="modal-backdrop">
+    <div class="modal-window" style="max-width:1100px;">
+      <button class="modal-close-btn" onclick="closeComparisonModal()">&times;</button>
+      <h2 style="color:#fff; font-size:1.4rem; margin-bottom:1rem;">
+        <i class="fa-solid fa-columns" style="color:var(--accent-cyan);"></i> Cross-Investigation Science Comparison Matrix
+      </h2>
+      <div id="comparisonMatrixBody"></div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="/static/js/flame_simulator.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
